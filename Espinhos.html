@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Espinhos</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: #06170c;
+    overflow: hidden;
+    font-family: monospace;
+  }
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+  .conteudo {
+    position: relative;
+    z-index: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #7fdb9a;
+  }
+  #pips {
+    letter-spacing: 6px;
+    margin-bottom: 30px;
+    font-size: 20px;
+    min-height: 24px;
+  }
+  .botoes {
+    display: flex;
+    gap: 24px;
+  }
+  button {
+    font-family: monospace;
+    font-size: 16px;
+    padding: 14px 28px;
+    background: transparent;
+    color: #7fdb9a;
+    border: 1px solid #2f6b46;
+    cursor: pointer;
+    letter-spacing: 2px;
+  }
+  button:hover {
+    background: #0e2e19;
+    border-color: #7fdb9a;
+  }
+  #msg {
+    margin-top: 24px;
+    min-height: 20px;
+    font-size: 14px;
+  }
+  .no { color: #d97a7a; }
+  .ok { color: #a8f0c0; }
+</style>
+</head>
+<body>
+
+<canvas id="fundo"></canvas>
+
+<div class="conteudo">
+  <div id="pips"></div>
+  <div class="botoes">
+    <button onclick="escolher('L')">esquerda</button>
+    <button onclick="escolher('R')">direita</button>
+  </div>
+  <div id="msg"></div>
+</div>
+
+<script>
+// animação de fundo: pontos verdes flutuando devagar
+var canvas = document.getElementById('fundo');
+var ctx = canvas.getContext('2d');
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+var pontos = [];
+for (var i = 0; i < 60; i++) {
+  pontos.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 2 + 0.5,
+    vy: Math.random() * 0.3 + 0.05,
+    a: Math.random() * 0.5 + 0.15
+  });
+}
+
+function desenhar() {
+  ctx.fillStyle = '#06170c';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  for (var i = 0; i < pontos.length; i++) {
+    var p = pontos[i];
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(200, 60, 60,' + p.a + ')';
+    ctx.fill();
+    p.y -= p.vy;
+    if (p.y < -5) {
+      p.y = canvas.height + 5;
+      p.x = Math.random() * canvas.width;
+    }
+  }
+  requestAnimationFrame(desenhar);
+}
+desenhar();
+
+// logica do jogo
+var correta = ["R","R","R","L","L","R","R","R","R","L"];
+var atual = [];
+
+function escolher(direcao) {
+  atual.push(direcao);
+  document.getElementById('pips').textContent = '. '.repeat(atual.length).trim();
+  document.getElementById('msg').innerHTML = '';
+
+  if (atual.length === correta.length) {
+    var certo = true;
+    for (var i = 0; i < correta.length; i++) {
+      if (atual[i] !== correta[i]) { certo = false; break; }
+    }
+    var msg = document.getElementById('msg');
+    if (certo) {
+      msg.innerHTML = '<span class="ok">correto.</span>';
+      window.location.href = "Negligencia.html";
+    } else {
+      msg.innerHTML = '<span class="no">sequencia errada. tente novamente.</span>';
+    }
+    atual = [];
+    setTimeout(function() {
+      document.getElementById('pips').textContent = '';
+    }, 1500);
+  }
+}
+</script>
+
+</body>
+</html>

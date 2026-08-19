@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>InterOmnes</title>
+<style>
+  body {
+    background: #ffffff;
+    color: #000000;
+    font-family: monospace;
+    font-size: 14px;
+    padding: 20px;
+  }
+  input {
+    font-family: monospace;
+    font-size: 14px;
+    padding: 2px 4px;
+    letter-spacing: 2px;
+  }
+  button {
+    font-family: monospace;
+    font-size: 14px;
+    margin-left: 6px;
+  }
+  #msg {
+    margin-top: 12px;
+  }
+  .ok { color: #006400; }
+  .no { color: #8b0000; }
+</style>
+</head>
+<body>
+<pre>InterOmnes</pre>
+<hr>
+<pre>
+codigo:
+</pre>
+<input id="campo" type="text" maxlength="12" autocomplete="off">
+<button onclick="verificar()">enviar</button>
+<div id="msg"></div>
+
+<script>
+function verificar() {
+  var senha = "20042009";
+
+  var valor = document.getElementById("campo").value.trim();
+  var msg = document.getElementById("msg");
+
+  if (valor === senha) {
+    msg.innerHTML = '<span class="ok">correto.</span>';
+    window.location.href = "Espinhos.html";
+  } else {
+    msg.innerHTML = '<span class="no">incorreto. tente novamente.</span>';
+  }
+}
+
+document.getElementById("campo").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") verificar();
+});
+</script>
+</body>
+</html>
